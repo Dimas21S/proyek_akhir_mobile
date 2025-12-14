@@ -276,25 +276,25 @@ class _ArtistToUserState extends State<ArtistToUser> {
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: primaryColor.withOpacity(0.3),
-                          width: 2,
-                        ),
-                      ),
-                      child: CircleAvatar(
-                        radius: 22,
-                        backgroundColor: Colors.grey[200],
-                        backgroundImage: NetworkImage(
-                          chatData['mua']['profile_photo']?.toString() ?? '',
-                        ),
-                        onBackgroundImageError: (exception, stackTrace) {
-                          // Handle error
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     shape: BoxShape.circle,
+                    //     border: Border.all(
+                    //       color: primaryColor.withOpacity(0.3),
+                    //       width: 2,
+                    //     ),
+                    //   ),
+                    //   child: CircleAvatar(
+                    //     radius: 22,
+                    //     backgroundColor: Colors.grey[200],
+                    //     backgroundImage: NetworkImage(
+                    //       chatData['mua']['profile_photo']?.toString() ?? '',
+                    //     ),
+                    //     onBackgroundImageError: (exception, stackTrace) {
+                    //       // Handle error
+                    //     },
+                    //   ),
+                    // ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(

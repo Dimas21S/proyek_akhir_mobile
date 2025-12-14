@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ArtistChat extends StatefulWidget {
   const ArtistChat({super.key});
@@ -16,11 +17,24 @@ class _ArtistChatState extends State<ArtistChat> {
   final TextEditingController _searchController = TextEditingController();
 
   Future<Map<String, dynamic>> getReceivedMessages() async {
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token');
+
+    // Jika token tidak ditemukan, kembalikan Map kosong
+    if (token == null) {
+      print("Token tidak ditemukan");
+      return {};
+    }
+
     try {
       final url = Uri.parse("http://192.168.1.6:8000/api/chat");
       final response = await http.get(
         url,
-        headers: {'Accept': 'application/json'},
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+          "Content-Type": "application/json",
+        },
       );
 
       print('Chat API Status: ${response.statusCode}');
@@ -30,7 +44,7 @@ class _ArtistChatState extends State<ArtistChat> {
         var data = jsonDecode(response.body);
         return {
           "messages": data['data']['latest_messages'] ?? [],
-          "counts": data['data']['message_counts'] ?? 0,
+          "total": data['data']['total_messages'] ?? 0,
         };
       } else {
         return {"messages": [], "counts": 0, "error": "Failed to load"};
@@ -51,7 +65,7 @@ class _ArtistChatState extends State<ArtistChat> {
     Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
         latestMessages = result['messages'];
-        messageCount = result['counts'];
+        messageCount = result['total'];
         isLoading = false;
       });
     });
@@ -146,7 +160,7 @@ class _ArtistChatState extends State<ArtistChat> {
         onTap: () {
           Navigator.pushNamed(
             context,
-            '/artist-to-user',
+            '/user-to-artist',
             arguments: {
               "userId": msg['sender_id'],
               "sender_type": msg['sender_type'],

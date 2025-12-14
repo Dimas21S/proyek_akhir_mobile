@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
 
-      home: LoginPage(),
+      home: ArtistLoginPage(),
 
       routes: {
         '/about': (context) => const AboutUsPage(),
@@ -57,7 +57,7 @@ class MyApp extends StatelessWidget {
         '/booking': (context) => const UserBooking(),
 
         // Khusus Chat
-        '/user-to-artist': (context) => const UserToArtist(),
+        '/user-to-artist': (context) => UserToArtist(),
         '/artist-to-user': (context) => ArtistToUser(),
 
         // Admin

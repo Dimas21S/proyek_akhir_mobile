@@ -24,7 +24,7 @@ class _UserToArtistState extends State<UserToArtist> {
     // Ambil data artist dari argument
     final data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    userId = data['id'];
+    userId = data['userId'];
 
     loadMessages(); // panggil API hanya sekali
   }
@@ -39,15 +39,23 @@ class _UserToArtistState extends State<UserToArtist> {
   }
 
   Future<Map<String, dynamic>> getMessageUser(int userId) async {
-    final url = Uri.parse("http://192.168.1.6:8000/api/chat-mua/$userId");
+    final pref = await SharedPreferences.getInstance();
+    final token = pref.getString('token');
 
-    final response = await http.post(url);
+    final url = Uri.parse("http://192.168.1.6:8000/api/chat-user/$userId");
 
-    if (response.statusCode == 201) {
-      var data = jsonDecode(response.body);
-      return data;
+    final response = await http.get(
+      url,
+      headers: {"Accept": "application/json", "Authorization": "Bearer $token"},
+    );
+
+    print("CHAT DETAIL STATUS: ${response.statusCode}");
+    print("CHAT DETAIL BODY: ${response.body}");
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
     } else {
-      return {};
+      throw Exception('Gagal mengambil chat');
     }
   }
 
@@ -55,12 +63,7 @@ class _UserToArtistState extends State<UserToArtist> {
     final pref = await SharedPreferences.getInstance();
     final token = pref.getString('token');
 
-    if (token == null) {
-      print("Token tidak ditemukan");
-      return;
-    }
-
-    final url = Uri.parse("http://192.168.1.6:8000/api/chat-mua/$userId");
+    final url = Uri.parse("http://192.168.1.6:8000/api/chat-user/$userId");
 
     final response = await http.post(
       url,
@@ -72,50 +75,156 @@ class _UserToArtistState extends State<UserToArtist> {
       body: jsonEncode({"message": message}),
     );
 
+    print("SEND STATUS: ${response.statusCode}");
+    print("SEND BODY: ${response.body}");
+
     if (response.statusCode == 201) {
-      print("Berhasil kirim chat: ${response.body}");
+      messageController.clear();
+      await loadMessages(); // refresh chat
     } else {
-      print("Gagal: ${response.body}");
+      throw Exception('Gagal kirim pesan');
     }
+  }
+
+  Widget chatBubble(Map<String, dynamic> msg) {
+    final bool isMe = msg['sender_type'] == 'make_up_artist';
+
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        ),
+        decoration: BoxDecoration(
+          color: isMe
+              ? Colors.grey[200] // kita (kiri)
+              : Color.fromRGBO(228, 207, 206, 1), // lawan (kanan)
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(14),
+            topRight: Radius.circular(14),
+            bottomLeft: Radius.circular(isMe ? 0 : 14),
+            bottomRight: Radius.circular(isMe ? 14 : 0),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: isMe
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.end,
+          children: [
+            Text(msg['message'], style: const TextStyle(fontSize: 14)),
+            const SizedBox(height: 4),
+            Text(
+              _formatTime(msg['created_at']),
+              style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatTime(String timestamp) {
+    final dateTime = DateTime.parse(timestamp);
+    final hours = dateTime.hour.toString().padLeft(2, '0');
+    final minutes = dateTime.minute.toString().padLeft(2, '0');
+    return '$hours:$minutes';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leadingWidth: 120,
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+        backgroundColor: const Color.fromRGBO(228, 207, 206, 1),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Row(
           children: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.arrow_back)),
-
-            const SizedBox(width: 10),
-
             CircleAvatar(
               radius: 18,
               backgroundImage: AssetImage('assets/images/logofullnyah.png'),
             ),
+            const SizedBox(width: 10),
+            const Text(
+              'Chat',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ],
         ),
-        backgroundColor: Color.fromRGBO(228, 207, 206, 1),
-        elevation: 0,
       ),
 
-      body: SafeArea(child: Container(padding: EdgeInsets.all(16))),
-
-      bottomNavigationBar: SizedBox(
-        width: 100,
-        height: 80,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+      body: SafeArea(
+        child: Column(
           children: [
-            TextFormField(
-              obscureText: false,
-              decoration: InputDecoration(
-                hintText: 'Masukkan pesan',
-                border: OutlineInputBorder(),
-                suffixIcon: Icon(Icons.place),
+            /// CHAT LIST
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ListView.builder(
+                  reverse: false,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return chatBubble(messages[index]);
+                  },
+                ),
+              ),
+            ),
+
+            /// INPUT CHAT
+            Container(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 6)],
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: messageController,
+                      minLines: 1,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        hintText: 'Masukkan pesan',
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 10,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  CircleAvatar(
+                    backgroundColor: const Color.fromRGBO(228, 207, 206, 1),
+                    child: IconButton(
+                      icon: const Icon(Icons.send, color: Colors.black87),
+                      onPressed: () {
+                        if (messageController.text.trim().isNotEmpty) {
+                          sendMessageArtist(
+                            userId!,
+                            messageController.text.trim(),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
