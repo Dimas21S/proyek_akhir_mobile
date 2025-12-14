@@ -10,6 +10,7 @@ import 'package:proyek_akhir/pages/chat/artist_to_user.dart';
 import 'package:proyek_akhir/pages/chat/user_to_artist.dart';
 import 'package:proyek_akhir/pages/contact_us.dart';
 import 'package:proyek_akhir/pages/auth/login.dart';
+import 'package:proyek_akhir/pages/user/edit_user_profile.dart';
 import 'package:proyek_akhir/pages/user/user_booking.dart';
 import 'package:proyek_akhir/pages/user/user_favorite.dart';
 import 'package:proyek_akhir/pages/user/user_find_location.dart';
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
 
-      home: ArtistLoginPage(),
+      home: LandingPage(),
 
       routes: {
         '/about': (context) => const AboutUsPage(),
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
         // Autentikasi
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
-        // '/login-mua': (context) => const ArtistLoginPage(),
+        '/login-mua': (context) => const ArtistLoginPage(),
         '/register-mua': (context) => const ArtistRegisterPage(),
 
         //User
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         '/deskripsi-artist': (context) => UserToDescription(),
         '/beranda': (context) => const UserHome(),
         '/booking': (context) => const UserBooking(),
+        '/edit-profil-user': (context) => const EditUserProfile(),
 
         // Khusus Chat
         '/user-to-artist': (context) => UserToArtist(),

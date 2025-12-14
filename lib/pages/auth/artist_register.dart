@@ -50,10 +50,6 @@ class _ArtistRegisterPageState extends State<ArtistRegisterPage> {
 
     // ✔ sukses
     if (response.statusCode == 201 && data["status"] == true) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Registrasi berhasil! Silakan login.")),
-      );
-
       Navigator.pushReplacementNamed(context, '/login-mua');
       return;
     }

@@ -19,12 +19,12 @@ class _EditProfilState extends State<EditProfil> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController linkMapController = TextEditingController();
+  TextEditingController hargaPaketController = TextEditingController();
 
   File? profilePhoto;
   String? selectedDay;
   int? selectedTimeOpen;
   int? selectedTimeClose;
-  int? hargaPaket;
   List<File> photos = [];
   bool isLoading = false;
 
@@ -134,6 +134,9 @@ class _EditProfilState extends State<EditProfil> {
       request.fields['category'] = categoryController.text;
       request.fields['description'] = descriptionController.text;
       request.fields['link_map'] = linkMapController.text;
+
+      final int paketHarga = int.parse(hargaPaketController.text);
+      request.fields['price'] = paketHarga.toString();
 
       // Tambahkan data jam operasional jika ada
       if (selectedDay != null &&
@@ -656,6 +659,16 @@ class _EditProfilState extends State<EditProfil> {
                       controller: descriptionController,
                       decoration: InputDecoration(
                         labelText: "Deskripsi",
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.description),
+                      ),
+                      maxLines: 3,
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: hargaPaketController,
+                      decoration: InputDecoration(
+                        labelText: "Harga Paket",
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.description),
                       ),
