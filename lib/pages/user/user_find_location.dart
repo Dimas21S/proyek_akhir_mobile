@@ -78,12 +78,20 @@ class _UserFindLocationState extends State<UserFindLocation> {
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/');
             },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text('Home', style: TextStyle(color: Colors.black)),
           ),
           TextButton(
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/lokasi');
             },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text(
               'Location',
               style: TextStyle(color: Colors.black),
@@ -92,6 +100,10 @@ class _UserFindLocationState extends State<UserFindLocation> {
           TextButton(
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/favorit'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text(
               'Favorites',
               style: TextStyle(color: Colors.black),
@@ -101,6 +113,10 @@ class _UserFindLocationState extends State<UserFindLocation> {
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/profil');
             },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text('Profile', style: TextStyle(color: Colors.black)),
           ),
           const SizedBox(width: 10),
@@ -124,152 +140,382 @@ class _UserFindLocationState extends State<UserFindLocation> {
         ),
         child: SafeArea(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-
-              // Semua konten di sini
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                // HEADER SECTION
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: SearchAnchor(
-                          builder: (context, controller) {
-                            return SearchBar(
-                              hintText: 'Search...',
-                              controller: searchController,
-                              onSubmitted: (value) {
-                                setState(() {
-                                  searchText = value;
-                                });
-                                loadArtist();
-                                controller.closeView(searchController.text);
-                              },
-                            );
-                          },
-                          suggestionsBuilder: (context, controller) {
-                            return List<ListTile>.generate(5, (index) {
-                              final suggestion = 'Suggestion $index';
-                              return ListTile(
-                                title: Text(suggestion),
-                                onTap: () {
-                                  searchController.text;
-                                  controller.closeView(suggestion);
+                      // Search and Filter Section
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: SearchAnchor(
+                                builder: (context, controller) {
+                                  return SearchBar(
+                                    hintText: 'Search artist or location...',
+                                    controller: searchController,
+                                    textStyle:
+                                        MaterialStateTextStyle.resolveWith(
+                                          (states) =>
+                                              const TextStyle(fontSize: 14),
+                                        ),
+                                    onSubmitted: (value) {
+                                      setState(() {
+                                        searchText = value;
+                                      });
+                                      loadArtist();
+                                      controller.closeView(
+                                        searchController.text,
+                                      );
+                                    },
+                                    leading: const Icon(Icons.search, size: 20),
+                                  );
+                                },
+                                suggestionsBuilder: (context, controller) {
+                                  return List<ListTile>.generate(5, (index) {
+                                    final suggestion = 'Suggestion $index';
+                                    return ListTile(
+                                      leading: const Icon(
+                                        Icons.person,
+                                        size: 20,
+                                      ),
+                                      title: Text(suggestion),
+                                      onTap: () {
+                                        searchController.text = suggestion;
+                                        controller.closeView(suggestion);
+                                        setState(() {
+                                          searchText = suggestion;
+                                        });
+                                        loadArtist();
+                                      },
+                                    );
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[50],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: DropdownButton<String>(
+                                value: selectedLocation,
+                                underline: const SizedBox(),
+                                icon: const Icon(Icons.filter_list, size: 20),
+                                elevation: 0,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black87,
+                                ),
+                                onChanged: (value) {
                                   setState(() {
-                                    searchText = suggestion;
+                                    selectedLocation = value!;
                                   });
                                   loadArtist();
                                 },
-                              );
-                            });
-                          },
+                                items: locationList.map((loc) {
+                                  return DropdownMenuItem(
+                                    value: loc,
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        minWidth: 80,
+                                      ),
+                                      child: Text(
+                                        loc.toUpperCase(),
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-
-                      const SizedBox(width: 8),
-
-                      DropdownButton<String>(
-                        value: selectedLocation,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedLocation = value!;
-                          });
-                          loadArtist(); // SEHARUSNYA loadArtist(), bukan getLocation()
-                        },
-                        items: locationList.map((loc) {
-                          return DropdownMenuItem(
-                            value: loc,
-                            child: Text(loc.toUpperCase()),
-                          );
-                        }).toList(),
                       ),
                     ],
                   ),
+                ),
 
-                  const SizedBox(height: 20),
+                // CONTENT SECTION
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Results Header
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Available Artists',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          Text(
+                            '${artistLocation.length} results',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
 
-                  // CARD
-                  isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : Column(
-                          children: List.generate(artistLocation.length, (
-                            index,
-                          ) {
-                            final artist = artistLocation[index];
-
-                            return Card(
-                              elevation: 3,
-                              margin: const EdgeInsets.only(bottom: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                      // Artists List
+                      isLoading
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 100,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  children: [
-                                    // FOTO / AVATAR
-                                    const CircleAvatar(
-                                      radius: 22,
-                                      backgroundImage: AssetImage(
-                                        'assets/images/avatar.png',
-                                      ),
-                                    ),
-
-                                    const SizedBox(width: 10),
-
-                                    // INFORMASI ARTIS
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            artist['name'] ?? "Tidak ada nama",
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            "Location: ${artist['address']?['kecamatan'] ?? 'Tidak diketahui'}",
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-
-                                    const Icon(
-                                      Icons.location_on,
-                                      color: Colors.red,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      artist['address']?['kecamatan'] ?? "-",
-                                    ),
-                                  ],
+                              child: const Center(
+                                child: CircularProgressIndicator(
+                                  color: Color.fromRGBO(228, 207, 206, 1),
                                 ),
                               ),
-                            );
-                          }),
-                        ),
-                ],
-              ),
+                            )
+                          : artistLocation.isEmpty
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(vertical: 60),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.search_off,
+                                    size: 60,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'No artists found',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Try changing your search or filter',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Column(
+                              children: List.generate(artistLocation.length, (
+                                index,
+                              ) {
+                                final artist = artistLocation[index];
+
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  child: Material(
+                                    elevation: 1,
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: InkWell(
+                                      onTap: () {
+                                        // Navigate to artist detail
+                                      },
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(16),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            // Avatar
+                                            CircleAvatar(
+                                              radius: 26,
+                                              backgroundColor:
+                                                  const Color.fromRGBO(
+                                                    228,
+                                                    207,
+                                                    206,
+                                                    0.3,
+                                                  ),
+                                              child:
+                                                  artist['profile_photo'] !=
+                                                      null
+                                                  ? ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            26,
+                                                          ),
+                                                      child: Image.network(
+                                                        artist['profile_photo'],
+                                                        width: 52,
+                                                        height: 52,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    )
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                            26,
+                                                          ),
+                                                      child: Image.asset(
+                                                        'assets/images/avatar.png',
+                                                        width: 52,
+                                                        height: 52,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                            ),
+
+                                            const SizedBox(width: 16),
+
+                                            // Artist Info
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    artist['name'] ??
+                                                        "Unknown Artist",
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
+                                                      color: Colors.black87,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 6),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.location_on,
+                                                        size: 14,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                      const SizedBox(width: 4),
+                                                      Expanded(
+                                                        child: Text(
+                                                          artist['address']?['kecamatan'] ??
+                                                              'Location not specified',
+                                                          style: TextStyle(
+                                                            fontSize: 13,
+                                                            color: Colors
+                                                                .grey[600],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  if (artist['category'] !=
+                                                      null) ...[
+                                                    const SizedBox(height: 4),
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 2,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            const Color.fromRGBO(
+                                                              228,
+                                                              207,
+                                                              206,
+                                                              0.2,
+                                                            ),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              4,
+                                                            ),
+                                                      ),
+                                                      child: Text(
+                                                        artist['category'],
+                                                        style: const TextStyle(
+                                                          fontSize: 11,
+                                                          color: Color.fromRGBO(
+                                                            228,
+                                                            207,
+                                                            206,
+                                                            1,
+                                                          ),
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ],
+                                              ),
+                                            ),
+
+                                            // Navigation Icon
+                                            Icon(
+                                              Icons.chevron_right,
+                                              color: Colors.grey[400],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ),
 
-      bottomNavigationBar: const Padding(
-        padding: EdgeInsets.only(bottom: 8),
-        child: Text(
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(color: Colors.grey[200]!, width: 1)),
+        ),
+        child: const Text(
           '© 2025 pakaimua. All rights reserved.',
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black54, fontSize: 12),
+          style: TextStyle(color: Colors.grey, fontSize: 11),
         ),
       ),
     );

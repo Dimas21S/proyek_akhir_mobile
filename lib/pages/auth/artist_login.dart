@@ -99,9 +99,8 @@ class _ArtistLoginPageState extends State<ArtistLoginPage> {
                 Center(
                   child: Container(
                     width: double.infinity,
-                    height: 230,
+                    height: 220,
                     decoration: BoxDecoration(
-                      color: Colors.deepPurple,
                       shape: BoxShape.rectangle,
                       image: DecorationImage(
                         image: AssetImage('assets/images/user_sign_in.png'),
@@ -150,16 +149,17 @@ class _ArtistLoginPageState extends State<ArtistLoginPage> {
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 0),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: usernameController,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     hintText: 'Enter your username',
+                    prefixIcon: Icon(Icons.person),
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
                 // Menangani Password
                 const Text(
@@ -170,24 +170,26 @@ class _ArtistLoginPageState extends State<ArtistLoginPage> {
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 0),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     hintText: 'Enter your password',
+                    prefixIcon: Icon(Icons.lock),
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
                 SizedBox(
+                  height: 56,
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: loginArtist,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Color.fromRGBO(64, 56, 121, 1),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),

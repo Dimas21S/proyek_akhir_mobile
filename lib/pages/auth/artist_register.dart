@@ -104,7 +104,7 @@ class _ArtistRegisterPageState extends State<ArtistRegisterPage> {
                 // Menangani teks Register
                 RichText(
                   text: TextSpan(
-                    text: 'If you have already an account register, please ',
+                    text: 'If you have already an account, please ',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -145,6 +145,7 @@ class _ArtistRegisterPageState extends State<ArtistRegisterPage> {
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     hintText: 'Enter your username',
+                    prefixIcon: Icon(Icons.person),
                   ),
                 ),
 
@@ -165,6 +166,7 @@ class _ArtistRegisterPageState extends State<ArtistRegisterPage> {
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     hintText: 'Enter your email',
+                    prefixIcon: Icon(Icons.email),
                   ),
                 ),
 
@@ -184,6 +186,7 @@ class _ArtistRegisterPageState extends State<ArtistRegisterPage> {
                   initialValue: selectedLocation,
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
+                    prefixIcon: Icon(Icons.location_on),
                   ),
                   hint: const Text('Choose your location'),
                   items: locations.map((loc) {
@@ -214,19 +217,21 @@ class _ArtistRegisterPageState extends State<ArtistRegisterPage> {
                   decoration: const InputDecoration(
                     border: UnderlineInputBorder(),
                     hintText: 'Enter your password',
+                    prefixIcon: Icon(Icons.lock),
                   ),
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 24),
 
                 SizedBox(
+                  height: 56,
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       register();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
+                      backgroundColor: Color.fromRGBO(64, 56, 121, 1),
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),

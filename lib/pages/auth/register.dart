@@ -90,7 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 /// ➤ PERBAIKAN KALIMAT
                 RichText(
                   text: TextSpan(
-                    text: 'If you already have an account, ',
+                    text: 'If you already have an account, please ',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                     children: [
                       TextSpan(
@@ -115,7 +115,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 Text("Username", style: TextStyle(fontSize: 16)),
                 TextFormField(
                   controller: usernameController,
-                  decoration: InputDecoration(labelText: "Enter your username"),
+                  decoration: InputDecoration(
+                    hintText: "Enter your username",
+                    prefixIcon: Icon(Icons.person),
+                  ),
                   validator: (value) =>
                       value!.isEmpty ? "Username wajib diisi" : null,
                 ),
@@ -126,7 +129,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 Text("Email", style: TextStyle(fontSize: 16)),
                 TextFormField(
                   controller: emailController,
-                  decoration: InputDecoration(labelText: "Enter your email"),
+                  decoration: InputDecoration(
+                    hintText: "Enter your email",
+                    prefixIcon: Icon(Icons.email),
+                  ),
                   validator: (value) =>
                       value!.isEmpty ? "Email wajib diisi" : null,
                 ),
@@ -138,14 +144,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(labelText: "Enter your password"),
+                  decoration: InputDecoration(
+                    hintText: "Enter your password",
+                    prefixIcon: Icon(Icons.lock),
+                  ),
                   validator: (value) =>
                       value!.length < 6 ? "Minimal 6 karakter" : null,
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
 
                 SizedBox(
+                  height: 56,
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
@@ -154,7 +164,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
+                      backgroundColor: Color.fromRGBO(64, 56, 121, 1),
                       padding: EdgeInsets.symmetric(vertical: 16),
                     ),
 

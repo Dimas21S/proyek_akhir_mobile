@@ -109,10 +109,10 @@ class _AdminVerificationState extends State<AdminVerification> {
                   final verificationId = artist['id'];
                   final status = artist['status'];
                   final name = artist['make_up_artist']['username'] ?? '-';
+                  final category = artist['make_up_artist']['category'] ?? '-';
                   final time = artist['created_at'] ?? '-';
-                  final address =
-                      artist['make_up_artist']['address']?['full_address'] ??
-                      '-';
+                  // final address =
+                  //     artist['address']['kota']?['full_address'] ?? '-';
 
                   return Card(
                     elevation: 3,
@@ -139,7 +139,7 @@ class _AdminVerificationState extends State<AdminVerification> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            time,
+                            category,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.grey,
@@ -155,10 +155,25 @@ class _AdminVerificationState extends State<AdminVerification> {
                             ),
                             decoration: BoxDecoration(
                               color: status == 'accepted'
-                                  ? Colors.green.withOpacity(0.2)
+                                  ? const Color.fromARGB(
+                                      255,
+                                      41,
+                                      108,
+                                      43,
+                                    ).withOpacity(0.2)
                                   : status == 'rejected'
-                                  ? Colors.red.withOpacity(0.2)
-                                  : Colors.orange.withOpacity(0.2),
+                                  ? const Color.fromARGB(
+                                      255,
+                                      95,
+                                      31,
+                                      26,
+                                    ).withOpacity(0.2)
+                                  : const Color.fromARGB(
+                                      255,
+                                      134,
+                                      94,
+                                      35,
+                                    ).withOpacity(0.2),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -193,7 +208,7 @@ class _AdminVerificationState extends State<AdminVerification> {
                                   const SizedBox(height: 10),
                                   Text('Waktu: $time'),
                                   const SizedBox(height: 10),
-                                  Text('Alamat: $address'),
+                                  Text('kateogri: $category'),
                                 ],
                               ),
                               actions: [

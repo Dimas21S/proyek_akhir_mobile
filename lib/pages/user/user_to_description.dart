@@ -47,191 +47,264 @@ class _UserToDescriptionState extends State<UserToDescription> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-        ),
-        backgroundColor: Color.fromRGBO(228, 207, 206, 1),
-        elevation: 0,
-        title: Text(
-          'Profil Artist',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              toggleLike(artist!['id']);
-            },
-            icon: Icon(
-              isLiked ? Icons.favorite : Icons.favorite_border,
-              color: isLiked ? Colors.red : Colors.black,
-              size: 24,
+      body: CustomScrollView(
+        slivers: [
+          // SLIVER APP BAR DENGAN FOTO PROFIL FULL WIDTH
+          SliverAppBar(
+            leading: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: Icon(Icons.arrow_back, color: Colors.white),
             ),
-            tooltip: 'Like',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                '/user-to-artist',
-                arguments: artist,
-              );
-            },
-            icon: Icon(Icons.chat, color: Colors.black, size: 24),
-            tooltip: 'Chat',
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/rating', arguments: artist?['id']);
-            },
-            icon: Icon(Icons.star, color: Colors.black, size: 24),
-            tooltip: 'Rating',
-          ),
-          IconButton(
-            onPressed: () {
-              // WhatsApp functionality
-              final phone = artist!['phone'];
-              if (phone != null) {
-                // Implement WhatsApp launch
-              }
-            },
-            icon: Icon(Icons.chat_bubble, color: Colors.green, size: 24),
-            tooltip: 'WhatsApp',
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // PROFILE SECTION
-                Container(
-                  padding: EdgeInsets.all(20),
-                  color: Color.fromRGBO(228, 207, 206, 0.3),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // PROFILE PHOTO
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(
-                            image: artist!['profile_photo'] != null
-                                ? NetworkImage(artist!['profile_photo'])
-                                : AssetImage('assets/images/user_sign_in.png')
-                                      as ImageProvider,
+            backgroundColor: Colors.transparent,
+            expandedHeight: 300, // Tinggi ketika expanded
+            floating: false,
+            pinned: true, // Tetap visible saat collapse
+            snap: false,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                children: [
+                  // FOTO PROFIL FULL WIDTH
+                  Positioned.fill(
+                    child: artist!['profile_photo'] != null
+                        ? Image.network(
+                            artist!['profile_photo'],
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            'assets/images/user_sign_in.png',
                             fit: BoxFit.cover,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 6,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      SizedBox(width: 20),
-
-                      // BIOGRAPHY
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              artist!['username'] ?? 'Nama Artist',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-
-                            SizedBox(height: 8),
-
-                            _buildInfoRow(
-                              icon: Icons.category,
-                              text:
-                                  artist!['category'] ?? 'Kategori belum diisi',
-                            ),
-
-                            SizedBox(height: 6),
-
-                            _buildInfoRow(
-                              icon: Icons.phone,
-                              text: artist!['phone'] ?? 'Telepon belum diisi',
-                            ),
-
-                            SizedBox(height: 6),
-
-                            _buildInfoRow(
-                              icon: Icons.location_on,
-                              text: artist!['location'] ?? 'Lokasi belum diisi',
-                            ),
-
-                            SizedBox(height: 6),
-
-                            _buildInfoRow(
-                              icon: Icons.calendar_today,
-                              text: 'Jadwal Makeup: Tersedia',
-                            ),
-
-                            SizedBox(height: 16),
-
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    '/booking',
-                                    arguments: {
-                                      "package_id": artist?['package_id'],
-                                      "mua_id": artist?['id'],
-                                      "price": artist?['price'],
-                                      "biaya_admin":
-                                          artist?['biaya_admin'] ?? 2000,
-                                      "total": artist?['total'],
-                                    },
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color.fromRGBO(
-                                    228,
-                                    207,
-                                    206,
-                                    1,
-                                  ),
-                                  foregroundColor: Colors.black,
-                                  padding: EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  elevation: 2,
-                                ),
-                                child: Text(
-                                  'BOOKING SEKARANG',
-                                  style: TextStyle(fontWeight: FontWeight.w600),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                   ),
+                  // GRADIENT OVERLAY untuk readability
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.8),
+                          Colors.transparent,
+                          Colors.transparent,
+                        ],
+                        stops: [0.1, 0.5, 1.0],
+                      ),
+                    ),
+                  ),
+                  // INFO ARTIST DI BAWAH FOTO
+                  Positioned(
+                    left: 20,
+                    right: 20,
+                    bottom: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          artist!['username'] ?? 'Nama Artist',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(blurRadius: 6, color: Colors.black),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          artist!['category'] ?? 'Makeup Artist',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            shadows: [
+                              Shadow(blurRadius: 4, color: Colors.black),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              title: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(20),
                 ),
+                child: Text(
+                  artist!['username'] ?? 'Artist',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              centerTitle: true,
+              collapseMode: CollapseMode.pin,
+            ),
+            actions: [
+              // Action buttons dengan background semi-transparan
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                margin: EdgeInsets.only(right: 8),
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        toggleLike(artist!['id']);
+                      },
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border,
+                        color: isLiked ? Colors.red : Colors.white,
+                        size: 22,
+                      ),
+                      tooltip: 'Like',
+                    ),
+                    Container(
+                      height: 20,
+                      width: 1,
+                      color: Colors.white.withOpacity(0.3),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/artist-to-user',
+                          arguments: artist,
+                        );
+                      },
+                      icon: Icon(Icons.chat, color: Colors.white, size: 22),
+                      tooltip: 'Chat',
+                    ),
+                    Container(
+                      height: 20,
+                      width: 1,
+                      color: Colors.white.withOpacity(0.3),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/rating',
+                          arguments: artist?['id'],
+                        );
+                      },
+                      icon: Icon(Icons.star, color: Colors.white, size: 22),
+                      tooltip: 'Rating',
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
 
-                // DESCRIPTION SECTION
-                Padding(
+          // KONTEN UTAMA
+          SliverList(
+            delegate: SliverChildListDelegate([
+              // INFO DETAIL SECTION
+              Container(
+                padding: EdgeInsets.all(20),
+                color: Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // WhatsApp Button terpisah
+                    // SizedBox(
+                    //   width: double.infinity,
+                    //   child: ElevatedButton.icon(
+                    //     onPressed: () {
+                    //       final phone = artist!['phone'];
+                    //       if (phone != null) {
+                    //         // Implement WhatsApp launch
+                    //       }
+                    //     },
+                    //     icon: Icon(Icons.chat_bubble, color: Colors.white),
+                    //     label: Text(
+                    //       'Hubungi via WhatsApp',
+                    //       style: TextStyle(
+                    //         fontWeight: FontWeight.w600,
+                    //         color: Colors.white,
+                    //       ),
+                    //     ),
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: Colors.green,
+                    //       padding: EdgeInsets.symmetric(vertical: 14),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(10),
+                    //       ),
+                    //       elevation: 3,
+                    //     ),
+                    //   ),
+                    // ),
+                    SizedBox(height: 20),
+
+                    // Info lengkap artist
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildInfoRow(
+                          icon: Icons.phone,
+                          text: artist!['phone'] ?? 'Telepon belum diisi',
+                        ),
+                        SizedBox(height: 12),
+                        _buildInfoRow(
+                          icon: Icons.location_on,
+                          text: artist!['location'] ?? 'Lokasi belum diisi',
+                        ),
+                        SizedBox(height: 12),
+                        _buildInfoRow(
+                          icon: Icons.calendar_today,
+                          text: 'Jadwal Makeup: Tersedia',
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 24),
+
+                    // BOOKING BUTTON
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/booking',
+                            arguments: {'artistId': artist!['id']},
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromRGBO(228, 207, 206, 1),
+                          foregroundColor: Colors.black,
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 3,
+                        ),
+                        child: Text(
+                          'BOOKING SEKARANG',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // DESCRIPTION SECTION
+              Container(
+                color: Colors.white,
+                child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,14 +317,12 @@ class _UserToDescriptionState extends State<UserToDescription> {
                           color: Colors.black87,
                         ),
                       ),
-
-                      SizedBox(height: 10),
-
+                      SizedBox(height: 12),
                       Container(
-                        padding: EdgeInsets.all(12),
+                        padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.grey),
                         ),
                         child: Text(
@@ -259,18 +330,21 @@ class _UserToDescriptionState extends State<UserToDescription> {
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.black87,
-                            height: 1.5,
+                            height: 1.6,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
+              ),
 
-                Divider(height: 1, thickness: 1, color: Colors.grey[200]),
+              Divider(height: 1, thickness: 1, color: Colors.grey[200]),
 
-                // GALLERY SECTION
-                Padding(
+              // GALLERY SECTION
+              Container(
+                color: Colors.white,
+                child: Padding(
                   padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,8 +357,7 @@ class _UserToDescriptionState extends State<UserToDescription> {
                           color: Colors.black87,
                         ),
                       ),
-
-                      SizedBox(height: 15),
+                      SizedBox(height: 16),
 
                       if ((artist!['gallery'] as List<dynamic>?)?.isEmpty ??
                           true)
@@ -297,10 +370,13 @@ class _UserToDescriptionState extends State<UserToDescription> {
                                 size: 60,
                                 color: Colors.grey[300],
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 12),
                               Text(
                                 'Belum ada portofolio',
-                                style: TextStyle(color: Colors.grey[500]),
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 14,
+                                ),
                               ),
                             ],
                           ),
@@ -312,9 +388,9 @@ class _UserToDescriptionState extends State<UserToDescription> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                childAspectRatio: 0.8,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                childAspectRatio: 0.85,
                               ),
                           itemCount:
                               (artist!['gallery'] as List<dynamic>?)?.length ??
@@ -322,7 +398,7 @@ class _UserToDescriptionState extends State<UserToDescription> {
                           itemBuilder: (context, index) {
                             final url = artist!['gallery']?[index] ?? '';
                             return ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(10),
                               child: url.isNotEmpty
                                   ? Image.network(
                                       url,
@@ -343,13 +419,19 @@ class _UserToDescriptionState extends State<UserToDescription> {
                                           (context, error, stackTrace) {
                                             return Container(
                                               color: Colors.grey[200],
-                                              child: Icon(Icons.broken_image),
+                                              child: Icon(
+                                                Icons.broken_image,
+                                                color: Colors.grey[400],
+                                              ),
                                             );
                                           },
                                     )
                                   : Container(
                                       color: Colors.grey[200],
-                                      child: Icon(Icons.photo),
+                                      child: Icon(
+                                        Icons.photo,
+                                        color: Colors.grey[400],
+                                      ),
                                     ),
                             );
                           },
@@ -357,24 +439,30 @@ class _UserToDescriptionState extends State<UserToDescription> {
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+
+              SizedBox(height: 20), // Extra spacing bottom
+            ]),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  // Helper Widget
+  // Helper Widget - TETAP SAMA
   Widget _buildInfoRow({required IconData icon, required String text}) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.black54),
-        SizedBox(width: 8),
+        Icon(icon, size: 18, color: Color.fromRGBO(228, 207, 206, 1)),
+        SizedBox(width: 12),
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontSize: 13, color: Colors.black54),
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

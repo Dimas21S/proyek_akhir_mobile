@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                 Center(
                   child: Container(
                     width: double.infinity,
-                    height: 230,
+                    height: 220,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       image: DecorationImage(
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 RichText(
                   text: TextSpan(
-                    text: 'If you already have an account, please',
+                    text: 'If you dont have an account, please ',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -151,8 +151,9 @@ class _LoginPageState extends State<LoginPage> {
                       controller: usernameController,
                       obscureText: false,
                       decoration: const InputDecoration(
-                        labelText: "Enter your username",
+                        hintText: "Enter your username",
                         border: UnderlineInputBorder(),
+                        prefixIcon: Icon(Icons.person),
                       ),
                     ),
                   ],
@@ -177,21 +178,23 @@ class _LoginPageState extends State<LoginPage> {
                       controller: passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
-                        labelText: "Enter your password",
+                        hintText: "Enter your password",
                         border: UnderlineInputBorder(),
+                        prefixIcon: Icon(Icons.lock),
                       ),
                     ),
                   ],
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
 
                 SizedBox(
+                  height: 56,
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: loginUser,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
+                      backgroundColor: Color.fromRGBO(64, 56, 121, 1),
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),

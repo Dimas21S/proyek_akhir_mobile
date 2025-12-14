@@ -68,10 +68,18 @@ class _UserHomeState extends State<UserHome> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text('Home', style: TextStyle(color: Colors.black)),
           ),
           TextButton(
             onPressed: () => Navigator.pushReplacementNamed(context, '/lokasi'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text(
               'Location',
               style: TextStyle(color: Colors.black),
@@ -80,6 +88,10 @@ class _UserHomeState extends State<UserHome> {
           TextButton(
             onPressed: () =>
                 Navigator.pushReplacementNamed(context, '/favorit'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text(
               'Favorites',
               style: TextStyle(color: Colors.black),
@@ -87,6 +99,10 @@ class _UserHomeState extends State<UserHome> {
           ),
           TextButton(
             onPressed: () => Navigator.pushReplacementNamed(context, '/profil'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              textStyle: const TextStyle(fontSize: 12),
+            ),
             child: const Text('Profile', style: TextStyle(color: Colors.black)),
           ),
           const SizedBox(width: 10),
@@ -107,9 +123,16 @@ class _UserHomeState extends State<UserHome> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
 
             // Menu Icon Row
+            Text(
+              "MUA Categories",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 10),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Wrap(
@@ -148,6 +171,11 @@ class _UserHomeState extends State<UserHome> {
             ),
 
             const SizedBox(height: 20),
+
+            Text(
+              "MUA Party & Event Recommendations",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
 
             // Contoh Card untuk kategori
             isLoading
