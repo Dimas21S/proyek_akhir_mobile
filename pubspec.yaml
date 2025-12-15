@@ -68,7 +68,7 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   assets:
-    - assets/images/bgLPGCR.png
+    - assets/images/bgLPGC.png
     - assets/images/logofullnyah.png
     - assets/images/about_us.png
     - assets/images/about_us1.png

@@ -1,8 +1,93 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'about_us.dart'; // Pastikan file ini ada
 import 'contact_us.dart'; // Pastikan file ini ada
 
 class LandingPage extends StatelessWidget {
+  void _showSignInOptionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Column(
+            children: [
+              Icon(
+                Icons.login,
+                size: 40,
+                color: const Color.fromRGBO(228, 207, 206, 1),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Sign In As',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // User Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/signin-user');
+                  },
+                  icon: const Icon(Icons.person_outline, size: 20),
+                  label: const Text('User'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black87,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: BorderSide(color: Colors.grey[300]!, width: 1),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Makeup Artist Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/signin-artist');
+                  },
+                  icon: const Icon(Icons.brush_outlined, size: 20),
+                  label: const Text('Makeup Artist'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromRGBO(228, 207, 206, 1),
+                    foregroundColor: Colors.black87,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -19,10 +104,63 @@ class LandingPage extends StatelessWidget {
     final double navFontSize = 14 * scale;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   surfaceTintColor: Colors.transparent,
+      //   title: Image.asset('assets/images/logofullnyah.png'),
+      //   elevation: 0,
+      //   centerTitle: true,
+      //   actions: [
+      //     TextButton(
+      //       onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+      //       style: TextButton.styleFrom(
+      //         padding: const EdgeInsets.symmetric(horizontal: 12),
+      //         textStyle: const TextStyle(fontSize: 12),
+      //       ),
+      //       child: const Text(
+      //         'Collect',
+      //         style: TextStyle(
+      //           color: Colors.black87,
+      //           fontSize: 14,
+      //           fontWeight: FontWeight.w500,
+      //         ),
+      //       ),
+      //     ),
+      //     TextButton(
+      //       onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+      //       style: TextButton.styleFrom(
+      //         padding: const EdgeInsets.symmetric(horizontal: 12),
+      //         textStyle: const TextStyle(fontSize: 12),
+      //       ),
+      //       child: const Text(
+      //         'About',
+      //         style: TextStyle(
+      //           color: Colors.black87,
+      //           fontSize: 14,
+      //           fontWeight: FontWeight.w500,
+      //         ),
+      //       ),
+      //     ),
+      //     TextButton(
+      //       onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+      //       style: TextButton.styleFrom(
+      //         padding: const EdgeInsets.symmetric(horizontal: 12),
+      //         textStyle: const TextStyle(fontSize: 12),
+      //       ),
+      //       child: const Text(
+      //         'Contact',
+      //         style: TextStyle(
+      //           color: Colors.black87,
+      //           fontSize: 14,
+      //           fontWeight: FontWeight.w500,
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
       body: SingleChildScrollView(
         child: SizedBox(
-          height: 850 * scale + MediaQuery.of(context).padding.top + 20,
+          height: 1050 * scale + MediaQuery.of(context).padding.top + 20,
           child: Stack(
             children: [
               // 1. Area Status Bar Putih
@@ -39,7 +177,7 @@ class LandingPage extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/images/bgLPGCR.png'),
+                      image: AssetImage('assets/images/bgLPGC.png'),
                       fit: BoxFit.fitWidth,
                       alignment: Alignment.topCenter,
                     ),
@@ -52,7 +190,7 @@ class LandingPage extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.black, Colors.black],
+                      colors: [Colors.transparent],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
@@ -62,8 +200,8 @@ class LandingPage extends StatelessWidget {
 
               // 3. NAVBAR
               Positioned(
-                top: 20 * scale + MediaQuery.of(context).padding.top + 20,
-                left: 20 * scale,
+                top: MediaQuery.of(context).padding.top + 4 * scale,
+                left: 18 * scale,
                 right: 20 * scale,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,9 +272,9 @@ class LandingPage extends StatelessWidget {
                 ),
               ),
 
-              // 4. Judul Utama
+              // // 4. Judul Utama
               Positioned(
-                top: 100 * scale + MediaQuery.of(context).padding.top + 20,
+                top: 50 * scale + MediaQuery.of(context).padding.top + 20,
                 left: 20 * scale,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,11 +310,12 @@ class LandingPage extends StatelessWidget {
 
               // 5. Button Sign In & Sign Up
               Positioned(
-                top: 180 * scale + MediaQuery.of(context).padding.top + 20,
+                top: 130 * scale + MediaQuery.of(context).padding.top + 20,
                 left: 20 * scale,
                 child: Row(
                   children: [
                     Container(
+                      height: 40 * scale,
                       padding: EdgeInsets.symmetric(
                         horizontal: 16 * scale,
                         vertical: 8 * scale,
@@ -185,17 +324,25 @@ class LandingPage extends StatelessWidget {
                         color: Color(0xFF8D6E63),
                         borderRadius: BorderRadius.circular(8 * scale),
                       ),
-                      child: Text(
-                        'Sign in',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16 * scale,
-                          fontWeight: FontWeight.bold,
+                      child: TextButton(
+                        onPressed: () => _showSignInOptionDialog(context),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          textStyle: const TextStyle(fontSize: 12),
+                        ),
+                        child: const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
                     SizedBox(width: 10 * scale),
                     Container(
+                      height: 40 * scale,
                       padding: EdgeInsets.symmetric(
                         horizontal: 16 * scale,
                         vertical: 8 * scale,
@@ -204,12 +351,19 @@ class LandingPage extends StatelessWidget {
                         border: Border.all(color: Color(0xFF8D6E63)),
                         borderRadius: BorderRadius.circular(8 * scale),
                       ),
-                      child: Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Color(0xFF8D6E63),
-                          fontSize: 16 * scale,
-                          fontWeight: FontWeight.bold,
+                      child: TextButton(
+                        onPressed: () => _showSignInOptionDialog(context),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          textStyle: const TextStyle(fontSize: 12),
+                        ),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
@@ -219,7 +373,7 @@ class LandingPage extends StatelessWidget {
 
               // 6. 🔶 2 KOTAK BARU — TEKS CENTER HORIZONTAL & UKURAN BISA DIKURANGI SENDIRI
               Positioned(
-                top: 240 * scale + MediaQuery.of(context).padding.top + 20,
+                top: 200 * scale + MediaQuery.of(context).padding.top + 20,
                 left: 0,
                 right: 0,
                 child: Center(
@@ -323,7 +477,7 @@ class LandingPage extends StatelessWidget {
 
               // 7. 🔷 JUDUL "MENGAPA MEMILIH KAMI" — DITAMBAHKAN DI ANTARA 2 KOTAK & 4 ITEM MATERIAL
               Positioned(
-                top: 420 * scale + MediaQuery.of(context).padding.top + 20,
+                top: 370 * scale + MediaQuery.of(context).padding.top + 20,
                 left: 20 * scale,
                 right: 20 * scale,
                 child: Column(
@@ -355,7 +509,7 @@ class LandingPage extends StatelessWidget {
 
               // 8. 🔷 4 ITEM MATERIAL — DIBAGI 2 BARIS, TEKS DI SAMPING GAMBAR (SESUAI PERMINTAANMU)
               Positioned(
-                top: 490 * scale + MediaQuery.of(context).padding.top + 20,
+                top: 440 * scale + MediaQuery.of(context).padding.top + 20,
                 left: 20 * scale,
                 right: 20 * scale,
                 child: Column(
@@ -411,7 +565,7 @@ class LandingPage extends StatelessWidget {
 
               // 9. 🔷 "TENTANG KAMI" + BUTTON — SESUAI GAMBAR (diposisikan dengan gap aman)
               Positioned(
-                top: 750 * scale + MediaQuery.of(context).padding.top + 20,
+                top: 650 * scale + MediaQuery.of(context).padding.top + 20,
                 left: 20 * scale,
                 right: 20 * scale,
                 child: Column(
@@ -464,8 +618,70 @@ class LandingPage extends StatelessWidget {
                   ],
                 ),
               ),
+
+              Positioned(
+                top: 800 * scale + MediaQuery.of(context).padding.top + 20,
+                left: 20 * scale,
+                right: 20 * scale,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Judul + Button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              'Seni Kecantikan',
+                              style: TextStyle(
+                                fontSize: 18 * scale,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 10),
+
+                            Text(
+                              "Kami menghadirkan para makeup artist berbakat dengan hasil karya terbaik, mulai dari tampilan alami yang elegan hingga kreasi bold yang memukau.",
+                              style: TextStyle(
+                                fontSize: 11 * scale,
+                                color: Colors.black.withOpacity(0.7),
+                                height: 1.4,
+                              ),
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+
+                        // Push button ke kanan
+                        Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('assets/images/lpseni.png'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
+        ),
+      ),
+
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        color: Colors.white,
+        child: const Text(
+          '© 2025 pakaimua. All rights reserved.',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey, fontSize: 12),
         ),
       ),
     );
